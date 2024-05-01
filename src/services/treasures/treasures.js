@@ -22,8 +22,8 @@ export * from './treasures.schema.js'
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const treasures = (app) => {
-  // Register our service on the Feathers application
-  app.use(treasuresPath, new TreasuresService(getOptions(app)), {
+    // Register our service on the Feathers application
+    app.use(treasuresPath, new TreasuresService(getOptions(app)), {
     // A list of all methods this service exposes externally
     methods: treasuresMethods,
     // You can add additional custom events to be sent to clients here
@@ -46,14 +46,20 @@ export const treasures = (app) => {
       ],
       find: [
         async (context) => {
-          const { latitude, longitude, distance } = context.params.query
-          
-          const query = context.service.createQuery()
+            const { latitude, longitude, distance, price_value } = context.params.query
 
-          // query.where('latitude', '>', latitude);
-          // query.where('longitude', '>', longitude);
+            const query = context.service.createQuery()
 
-          context.params.knex = query
+            query.select('treasures.*', 'money_values.*')
+                .leftJoin('money_values', function () {
+                    this.on('treasures.id', '=', 'money_values.treasure_id')
+                })
+                .where(function() {
+                    this.whereRaw(`6371 * acos(cos(radians(${latitude})) * cos(radians(treasures.latitude)) * cos(radians(treasures.longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(treasures.latitude))) <= ${distance}`);
+                })
+                .where('money_values.amount', '<=', price_value);
+
+            context.params.knex = query
         }
       ],
       get: [],

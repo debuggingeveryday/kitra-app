@@ -7,11 +7,12 @@ export const treasuresSchema = {
   $id: 'Treasures',
   type: 'object',
   additionalProperties: false,
-  required: ['latitude', 'longitude', 'distance'],
+  required: ['latitude', 'longitude', 'distance', 'price_value'],
   properties: {
     latitude: queryProperty({ type: 'number' }),
     longitude: queryProperty({ type: 'number' }),
     distance: queryProperty({ type: 'number' }),
+    price_value: queryProperty({ type: 'number' })
   }
 }
 export const treasuresValidator = getValidator(treasuresSchema, dataValidator)
