@@ -44,7 +44,18 @@ export const treasures = (app) => {
         schemaHooks.validateQuery(treasuresQueryValidator),
         schemaHooks.resolveQuery(treasuresQueryResolver)
       ],
-      find: [],
+      find: [
+        async (context) => {
+          const { latitude, longitude, distance } = context.params.query
+          
+          const query = context.service.createQuery()
+
+          // query.where('latitude', '>', latitude);
+          // query.where('longitude', '>', longitude);
+
+          context.params.knex = query
+        }
+      ],
       get: [],
       create: [
         schemaHooks.validateData(treasuresDataValidator),

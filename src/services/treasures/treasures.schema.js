@@ -7,9 +7,11 @@ export const treasuresSchema = {
   $id: 'Treasures',
   type: 'object',
   additionalProperties: false,
-  required: ['latitude'],
+  required: ['latitude', 'longitude', 'distance'],
   properties: {
-    latitude: queryProperty({ type: 'string' })
+    latitude: queryProperty({ type: 'number' }),
+    longitude: queryProperty({ type: 'number' }),
+    distance: queryProperty({ type: 'number' }),
   }
 }
 export const treasuresValidator = getValidator(treasuresSchema, dataValidator)
@@ -54,12 +56,4 @@ export const treasuresQuerySchema = {
 
 export const treasuresQueryValidator = getValidator(treasuresQuerySchema, queryValidator)
 
-export const treasuresQueryResolver = resolve({
-  latitude: async (value, treasures, context) => {
-    const { query } = context.params;
-
-    const mysqlClient = context.app.get('mysqlClient');
-
-    console.log(mysqlClient.select('*').from('treasures'));
-  }
-})
+export const treasuresQueryResolver = resolve({})
