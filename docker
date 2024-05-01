@@ -5,3 +5,7 @@ if [[ "$1" == "restart" ]];then
 	docker system prune --all && \
        	docker volume prune --all
 fi
+
+if [[ "$1" == "start-api" ]];then
+	docker run --network kitra_kitranet -p 3030:3030 -v ./:/kitra-app -w /kitra-app -it 13617ec9193b /bin/sh
+fi
