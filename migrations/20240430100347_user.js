@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt';
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
+import { hashPassword } from '../src/common/utils.js'
 
 export async function up(knex) {
   await knex.schema.createTable('users', (table) => {
@@ -10,20 +10,14 @@ export async function up(knex) {
     table.string('password')
   })
 
-  async function hashPassword(password) {
-    const salt = await bcrypt.genSalt(10)
-    return await bcrypt.hash(password, salt)
-  }
-
   await knex('users').insert([
-    { 
-      id: 1,
-      name: faker.person.fullName(),
+    {
+      name: 'admin',
       age: Math.floor(Math.random() * 100) + 1,
       email: 'admin@system.com',
       password: await hashPassword('1234')
-    },
-  ]);
+    }
+  ])
 }
 
 export async function down(knex) {

@@ -51,7 +51,7 @@ export const treasuresQuerySchema = {
   type: 'object',
   additionalProperties: false,
   properties: {
-    ...querySyntax(treasuresSchema.properties),
+    ...querySyntax(treasuresSchema.properties)
   }
 }
 

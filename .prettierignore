@@ -1,0 +1,13 @@
+yarn.lock
+docker-compose.yml
+docker
+package-lock.json
+readme.md
+public/**/*
+.prettierignore
+package.json
+config/default.json
+config/test.json
+.npmignore
+.prettierrc
+config/**/*

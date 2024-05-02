@@ -13,13 +13,11 @@ import configuration from '@feathersjs/configuration'
 import socketio from '@feathersjs/socketio'
 import { configurationValidator } from './configuration.js'
 import { logger } from './logger.js'
-import { logError } from './hooks/log-error.js'
 import { mysql } from './mysql.js'
-
 import { authentication } from './authentication.js'
-
 import { services } from './services/index.js'
 import { channels } from './channels.js'
+import { appHooks } from './app.hooks.js'
 
 const app = express(feathers())
 
@@ -52,14 +50,7 @@ app.use(notFound())
 app.use(errorHandler({ logger }))
 
 // Register hooks that run on all service methods
-app.hooks({
-  around: {
-    all: [logError]
-  },
-  before: {},
-  after: {},
-  error: {}
-})
+app.hooks(appHooks)
 // Register application setup and teardown hooks here
 app.hooks({
   setup: [],

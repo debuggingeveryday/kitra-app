@@ -1,6 +1,8 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { authenticate } from '@feathersjs/authentication'
 
+import { treasureNearby } from '../../hooks/treasure-nearby.js'
+
 import { hooks as schemaHooks, queryProperty } from '@feathersjs/schema'
 import {
   treasuresDataValidator,
@@ -22,8 +24,8 @@ export * from './treasures.schema.js'
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const treasures = (app) => {
-    // Register our service on the Feathers application
-    app.use(treasuresPath, new TreasuresService(getOptions(app)), {
+  // Register our service on the Feathers application
+  app.use(treasuresPath, new TreasuresService(getOptions(app)), {
     // A list of all methods this service exposes externally
     methods: treasuresMethods,
     // You can add additional custom events to be sent to clients here
@@ -35,33 +37,15 @@ export const treasures = (app) => {
       all: [
         authenticate('jwt'),
         schemaHooks.resolveExternal(treasuresExternalResolver),
-        schemaHooks.resolveResult(treasuresResolver),
-      ],
-      find: []
+        schemaHooks.resolveResult(treasuresResolver)
+      ]
     },
     before: {
       all: [
         schemaHooks.validateQuery(treasuresQueryValidator),
         schemaHooks.resolveQuery(treasuresQueryResolver)
       ],
-      find: [
-        async (context) => {
-            const { latitude, longitude, distance, price_value } = context.params.query
-
-            const query = context.service.createQuery()
-
-            query.select('treasures.*', 'money_values.*')
-                .leftJoin('money_values', function () {
-                    this.on('treasures.id', '=', 'money_values.treasure_id')
-                })
-                .where(function() {
-                    this.whereRaw(`6371 * acos(cos(radians(${latitude})) * cos(radians(treasures.latitude)) * cos(radians(treasures.longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(treasures.latitude))) <= ${distance}`);
-                })
-                .where('money_values.amount', '<=', price_value);
-
-            context.params.knex = query
-        }
-      ],
+      find: [treasureNearby],
       get: [],
       create: [
         schemaHooks.validateData(treasuresDataValidator),

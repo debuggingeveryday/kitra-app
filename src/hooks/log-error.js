@@ -10,6 +10,6 @@ export const logError = async (context, next) => {
       logger.error('Data: %O', error.data)
     }
 
-    throw error
+    throw { message: 'Error Request' }
   }
 }

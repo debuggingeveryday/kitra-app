@@ -8,4 +8,6 @@ describe('users service', () => {
 
     assert.ok(service, 'Registered the service')
   })
+
+  it('user logins', () => {})
 })
