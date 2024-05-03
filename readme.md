@@ -2,41 +2,24 @@
 
 > Technical Exam SERINO
 
-## About
+## Requirements
 
-This project uses [Feathers](http://feathersjs.com). An open source framework for building APIs and real-time applications.
+> Install docker
 
-## Getting Started
+## To run this project
 
-1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
-2. Install your dependencies
-
-    ```
-    cd path/to/kitra
-    npm install
-    ```
-
-3. Start your app
-
-    ```
-    npm run migrate # Run migrations to set up the database
-    npm start
-    ```
-
-## Testing
-
-Run `npm test` and all your tests in the `test/` directory will be run.
-
-## Scaffolding
-
-This app comes with a powerful command line interface for Feathers. Here are a few things it can do:
-
+### start container
 ```
-$ npx feathers help                           # Show all commands
-$ npx feathers generate service               # Generate a new Service
+docker-compose up -d
 ```
 
-## Help
+### top container
+```
+docker-compose down
+```
 
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+## Test API postman
 
+```
+https://www.postman.com/edrianjansolatorio/workspace/public/collection/10885566-227cc1c7-5db4-416e-b6aa-d025e6cc14e4
+```

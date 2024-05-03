@@ -1,19 +1,6 @@
 version: "3.9"
 
 services:
-  api:
-    build:
-      context: .
-    ports:
-      - "3030:3030"
-    volumes:
-      - ./:/kitra-app
-    working_dir: /kitra-app
-    networks:
-      - kitranet
-    depends_on:
-      - db
-
   db:
     image: mariadb:10.3
     restart: always
@@ -24,18 +11,36 @@ services:
       MYSQL_ROOT_PASSWORD: root
     networks:
       - kitranet
-
-  phpmyadmin:
-    image: phpmyadmin
+    healthcheck:
+      test: ps aux | grep mysqld
+      interval: 10s
+      retries: 10
+      timeout: 5s
+      
+  adminer:
+    image: adminer
     restart: always
     ports:
       - 8080:8080
-    environment:
-      - PMA_ARBITRARY=1
+    networks:
+      - kitranet
+
+  api:
+    image: node:lts-alpine
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./:/kitra-app
+    working_dir: /kitra-app
+    command: 
+        sh -c "npm install && \
+        npm run migrate && \
+        npm start"
     networks:
       - kitranet
     depends_on:
-      - db
+      db:
+        condition: service_healthy 
 
 networks:
   kitranet:
